@@ -19,7 +19,6 @@ RETRIES = 2
 TEST_URL = "http://httpbin.org/ip"
 
 # ================= SESSION STORE =================
-# Each session_id -> { results, running, paused, semaphore, total }
 SESSIONS: dict = {}
 
 def get_session(session_id: str) -> dict:
@@ -28,7 +27,9 @@ def get_session(session_id: str) -> dict:
             "results": [],
             "running": False,
             "paused": False,
+            "cancelled": False,
             "semaphore": asyncio.Semaphore(MAX_CONCURRENT),
+            "active_tasks": [],
             "total": 0,
         }
     return SESSIONS[session_id]
@@ -47,8 +48,13 @@ async def check_one(proxy: str, session: dict) -> tuple:
         for proxy_type, proxy_url in proxy_types:
             for _ in range(RETRIES):
                 try:
+                    if session["cancelled"]:
+                        return False, proxy, "Cancelled"
+
                     while session["paused"]:
-                        await asyncio.sleep(0.5)
+                        if session["cancelled"]:
+                            return False, proxy, "Cancelled"
+                        await asyncio.sleep(0.3)
 
                     start = time.time()
                     timeout = aiohttp.ClientTimeout(total=TIMEOUT)
@@ -70,6 +76,8 @@ async def check_one(proxy: str, session: dict) -> tuple:
                                     ip = json.loads(data).get("origin", "Unknown")
                                     elapsed = round((time.time() - start) * 1000, 2)
                                     return True, proxy, f"{elapsed} ms | IP: {ip}"
+                except asyncio.CancelledError:
+                    return False, proxy, "Cancelled"
                 except Exception:
                     continue
 
@@ -79,20 +87,35 @@ async def check_one(proxy: str, session: dict) -> tuple:
 async def run_checker(proxies: list, session: dict):
     session["results"] = []
     session["running"] = True
+    session["cancelled"] = False
     session["total"] = len(proxies)
 
-    tasks = [check_one(p, session) for p in proxies]
+    tasks = [asyncio.create_task(check_one(p, session)) for p in proxies]
+    session["active_tasks"] = tasks
 
-    for i, task in enumerate(asyncio.as_completed(tasks), 1):
-        status, proxy, msg = await task
-        session["results"].append({
-            "proxy": proxy,
-            "status": "OK" if status else "DEAD",
-            "info": msg,
-            "checked": i,
-        })
+    for fut in asyncio.as_completed(tasks):
+        if session["cancelled"]:
+            for t in tasks:
+                if not t.done():
+                    t.cancel()
+            break
+        try:
+            status, proxy, msg = await fut
+            if session["cancelled"]:
+                break
+            if msg != "Cancelled":
+                session["results"].append({
+                    "proxy": proxy,
+                    "status": "OK" if status else "DEAD",
+                    "info": msg,
+                })
+        except asyncio.CancelledError:
+            break
+        except Exception:
+            continue
 
     session["running"] = False
+    session["active_tasks"] = []
 
 # ================= ROUTES =================
 @app.get("/", response_class=HTMLResponse)
@@ -119,11 +142,12 @@ async def upload(
 @app.get("/results")
 async def get_results(x_session_id: Optional[str] = Header(None)):
     if not x_session_id or x_session_id not in SESSIONS:
-        return {"running": False, "results": [], "paused": False, "total": 0}
+        return {"running": False, "results": [], "paused": False, "total": 0, "cancelled": False}
     s = SESSIONS[x_session_id]
     return {
         "running": s["running"],
         "paused": s["paused"],
+        "cancelled": s["cancelled"],
         "total": s["total"],
         "results": s["results"],
     }
@@ -133,6 +157,8 @@ async def toggle_pause(x_session_id: Optional[str] = Header(None)):
     if not x_session_id:
         return {"error": "No session ID"}
     session = get_session(x_session_id)
+    if not session["running"]:
+        return {"paused": False}
     session["paused"] = not session["paused"]
     return {"paused": session["paused"]}
 
@@ -156,9 +182,20 @@ async def reset(x_session_id: Optional[str] = Header(None)):
     if not x_session_id:
         return {"error": "No session ID"}
     session = get_session(x_session_id)
-    if session["running"]:
-        return {"error": "Cannot reset while scan is running"}
-    session["results"] = []
+
+    session["cancelled"] = True
     session["paused"] = False
+    for t in session.get("active_tasks", []):
+        if not t.done():
+            t.cancel()
+
+    await asyncio.sleep(0.2)
+
+    session["results"] = []
+    session["running"] = False
+    session["paused"] = False
+    session["cancelled"] = False
     session["total"] = 0
+    session["active_tasks"] = []
+
     return {"ok": True}
