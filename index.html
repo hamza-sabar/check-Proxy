@@ -60,10 +60,7 @@ body::after {
 .app { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 32px 20px 60px; }
 
 /* Header */
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-}
+.header { text-align: center; margin-bottom: 40px; }
 .header-badge {
   display: inline-flex;
   align-items: center;
@@ -90,11 +87,7 @@ body::after {
   letter-spacing: -0.03em;
   line-height: 1.1;
 }
-.header p {
-  color: var(--muted);
-  margin-top: 10px;
-  font-size: 0.95rem;
-}
+.header p { color: var(--muted); margin-top: 10px; font-size: 0.95rem; }
 
 /* Cards */
 .card {
@@ -117,14 +110,8 @@ body::after {
   position: relative;
   margin-bottom: 20px;
 }
-.upload-zone.dragover {
-  border-color: var(--accent);
-  background: rgba(99,102,241,0.08);
-}
-.upload-zone:hover {
-  border-color: rgba(99,102,241,0.7);
-  background: rgba(99,102,241,0.05);
-}
+.upload-zone.dragover { border-color: var(--accent); background: rgba(99,102,241,0.08); }
+.upload-zone:hover { border-color: rgba(99,102,241,0.7); background: rgba(99,102,241,0.05); }
 .upload-zone input[type="file"] { display: none; }
 .upload-icon {
   width: 48px;
@@ -140,7 +127,7 @@ body::after {
 .upload-zone h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
 .upload-zone p { font-size: 0.82rem; color: var(--muted); }
 .file-selected {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 8px;
   background: rgba(16,185,129,0.12);
@@ -150,7 +137,6 @@ body::after {
   font-size: 0.82rem;
   color: #6ee7b7;
   margin-top: 12px;
-  display: none;
 }
 
 /* Action row */
@@ -170,35 +156,15 @@ body::after {
   white-space: nowrap;
 }
 .btn:active { transform: scale(0.97); }
-.btn-primary {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  box-shadow: 0 4px 20px rgba(99,102,241,0.3);
-}
+.btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; box-shadow: 0 4px 20px rgba(99,102,241,0.3); }
 .btn-primary:hover { box-shadow: 0 4px 28px rgba(99,102,241,0.5); filter: brightness(1.1); }
-.btn-secondary {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  color: var(--muted2);
-}
+.btn-secondary { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted2); }
 .btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
-.btn-amber {
-  background: rgba(245,158,11,0.15);
-  border: 1px solid rgba(245,158,11,0.3);
-  color: #fcd34d;
-}
+.btn-amber { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
 .btn-amber:hover { background: rgba(245,158,11,0.25); }
-.btn-green {
-  background: rgba(16,185,129,0.15);
-  border: 1px solid rgba(16,185,129,0.3);
-  color: #6ee7b7;
-}
+.btn-green { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
 .btn-green:hover { background: rgba(16,185,129,0.25); }
-.btn-red {
-  background: rgba(239,68,68,0.15);
-  border: 1px solid rgba(239,68,68,0.3);
-  color: #fca5a5;
-}
+.btn-red { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
 .btn-red:hover { background: rgba(239,68,68,0.25); }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
@@ -233,13 +199,7 @@ body::after {
   position: relative;
   overflow: hidden;
 }
-.stat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+.stat-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; }
 .stat-card.green::before { background: radial-gradient(circle at top left, rgba(16,185,129,0.08), transparent 70%); opacity: 1; }
 .stat-card.red::before { background: radial-gradient(circle at top left, rgba(239,68,68,0.08), transparent 70%); opacity: 1; }
 .stat-card.purple::before { background: radial-gradient(circle at top left, rgba(99,102,241,0.08), transparent 70%); opacity: 1; }
@@ -256,12 +216,7 @@ body::after {
 .progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
 .progress-label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
 .progress-pct { font-size: 0.8rem; color: #a5b4fc; font-weight: 700; }
-.progress-track {
-  height: 6px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 100px;
-  overflow: hidden;
-}
+.progress-track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; }
 .progress-bar {
   height: 100%;
   background: linear-gradient(90deg, #6366f1, #a78bfa);
@@ -273,9 +228,7 @@ body::after {
 .progress-bar::after {
   content: '';
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  right: 0; top: 0; bottom: 0;
   width: 60px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25));
   animation: shimmer 1.5s infinite;
@@ -316,11 +269,7 @@ body::after {
   color: var(--muted);
   user-select: none;
 }
-.filter-tab.active {
-  background: var(--surface2);
-  color: var(--text);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-}
+.filter-tab.active { background: var(--surface2); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
 .filter-tab:hover:not(.active) { color: var(--muted2); }
 
 /* Table */
@@ -343,22 +292,8 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
 tbody tr:last-child td { border-bottom: none; }
 .td-num { color: var(--muted); font-size: 0.8rem; width: 50px; }
 .td-proxy { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #cbd5e1; }
-.td-status-ok {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--green);
-  font-weight: 700;
-  font-size: 0.8rem;
-}
-.td-status-dead {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--red);
-  font-weight: 700;
-  font-size: 0.8rem;
-}
+.td-status-ok { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-weight: 700; font-size: 0.8rem; }
+.td-status-dead { display: inline-flex; align-items: center; gap: 5px; color: var(--red); font-weight: 700; font-size: 0.8rem; }
 .td-info { color: var(--muted); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; }
 .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
 .empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; }
@@ -372,7 +307,6 @@ tbody tr:last-child td { border-bottom: none; }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
 @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
 @keyframes rowIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
-
 .row-new { animation: rowIn 0.25s ease; }
 </style>
 </head>
@@ -397,18 +331,10 @@ tbody tr:last-child td { border-bottom: none; }
     </div>
 
     <div class="actions">
-      <button class="btn btn-primary" id="btnStart" onclick="startScan()">
-        ▶ Start Scan
-      </button>
-      <button class="btn btn-amber" id="btnPause" onclick="togglePause()" disabled>
-        ⏸ Pause
-      </button>
-      <button class="btn btn-green" id="btnDownload" onclick="downloadWorking()" disabled>
-        ↓ Download Working
-      </button>
-      <button class="btn btn-red" id="btnReset" onclick="resetScan()" style="margin-left:auto">
-        ✕ Reset
-      </button>
+      <button class="btn btn-primary" id="btnStart" onclick="startScan()">▶ Start Scan</button>
+      <button class="btn btn-amber" id="btnPause" onclick="togglePause()" disabled>⏸ Pause</button>
+      <button class="btn btn-green" id="btnDownload" onclick="downloadWorking()" disabled>↓ Download Working</button>
+      <button class="btn btn-red" id="btnReset" onclick="resetScan()" style="margin-left:auto">✕ Reset</button>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -454,9 +380,9 @@ tbody tr:last-child td { border-bottom: none; }
       </div>
     </div>
 
-    <div class="filter-tabs" id="filterTabs">
-      <div class="filter-tab active" data-filter="all" onclick="setFilter('all')">All</div>
-      <div class="filter-tab" data-filter="ok" onclick="setFilter('ok')">✔ Working</div>
+    <div class="filter-tabs">
+      <div class="filter-tab" data-filter="all" onclick="setFilter('all')">All</div>
+      <div class="filter-tab active" data-filter="ok" onclick="setFilter('ok')">✔ Working</div>
       <div class="filter-tab" data-filter="dead" onclick="setFilter('dead')">✕ Dead</div>
     </div>
 
@@ -466,7 +392,7 @@ tbody tr:last-child td { border-bottom: none; }
           <tr>
             <th>#</th>
             <th>Proxy</th>
-            <th>Status</th>
+            <th id="thStatus">Status</th>
             <th>Latency / Info</th>
           </tr>
         </thead>
@@ -487,7 +413,6 @@ tbody tr:last-child td { border-bottom: none; }
 </div>
 
 <script>
-// Session ID — unique per browser tab, persisted in localStorage
 let SESSION_ID = localStorage.getItem('proxy_session_id');
 if (!SESSION_ID) {
   SESSION_ID = crypto.randomUUID();
@@ -498,7 +423,7 @@ const HEADERS = { 'X-Session-Id': SESSION_ID };
 
 let pollingTimer = null;
 let isPaused = false;
-let currentFilter = 'all';
+let currentFilter = 'ok';
 let lastResults = [];
 
 // ---- Drag & Drop ----
@@ -524,7 +449,7 @@ function setFile(file) {
 // ---- Actions ----
 async function startScan() {
   const input = document.getElementById('fileInput');
-  const file = input._file || (input.files[0]);
+  const file = input._file || input.files[0];
   if (!file) { showToast('Please select a proxy list file first.', 'error'); return; }
 
   const formData = new FormData();
@@ -557,7 +482,7 @@ async function togglePause() {
 async function downloadWorking() {
   const res = await fetch('/download', { headers: HEADERS });
   if (!res.ok || res.headers.get('content-type')?.includes('json')) {
-    const d = await res.json().catch(()=>({}));
+    const d = await res.json().catch(() => ({}));
     showToast(d.error || 'No working proxies to download.', 'error');
     return;
   }
@@ -572,22 +497,31 @@ async function downloadWorking() {
 }
 
 async function resetScan() {
-  const res = await fetch('/reset', { method: 'POST', headers: HEADERS });
-  const data = await res.json();
-  if (data.error) { showToast(data.error, 'error'); return; }
-  stopPolling();
-  lastResults = [];
-  isPaused = false;
-  renderTable([]);
-  updateStats([]);
-  setProgress(0, 0, 0);
-  updateStatusBadge(false, false);
-  document.getElementById('btnStart').disabled = false;
-  document.getElementById('btnPause').disabled = true;
-  document.getElementById('btnPause').textContent = '⏸ Pause';
-  document.getElementById('btnPause').className = 'btn btn-amber';
-  document.getElementById('btnDownload').disabled = true;
-  showToast('Session reset.', 'info');
+  const btnReset = document.getElementById('btnReset');
+  btnReset.textContent = '⏹ Stopping…';
+  btnReset.disabled = true;
+
+  try {
+    await fetch('/reset', { method: 'POST', headers: HEADERS });
+    stopPolling();
+    lastResults = [];
+    isPaused = false;
+    renderTable([]);
+    updateStats([]);
+    setProgress(0, 0, 0);
+    updateStatusBadge(false, false);
+    document.getElementById('btnStart').disabled = false;
+    document.getElementById('btnPause').disabled = true;
+    document.getElementById('btnPause').textContent = '⏸ Pause';
+    document.getElementById('btnPause').className = 'btn btn-amber';
+    document.getElementById('btnDownload').disabled = true;
+    showToast('Scan stopped and session reset.', 'info');
+  } catch(e) {
+    showToast('Error during reset.', 'error');
+  } finally {
+    btnReset.textContent = '✕ Reset';
+    btnReset.disabled = false;
+  }
 }
 
 // ---- Polling ----
@@ -608,25 +542,26 @@ async function fetchResults() {
     lastResults = data.results || [];
     isPaused = data.paused;
     const running = data.running;
+    const total = data.total || 0;
+    const checked = lastResults.length;
 
     updateStats(lastResults);
     renderTable(lastResults);
-
-    const checked = lastResults.length;
-    const total = data.total || 0;
     setProgress(checked, total, total > 0 ? Math.round(checked / total * 100) : 0);
     updateStatusBadge(running, isPaused);
 
-    const btn = document.getElementById('btnPause');
-    btn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
-    btn.className = isPaused ? 'btn btn-primary' : 'btn btn-amber';
+    const btnPause = document.getElementById('btnPause');
+    btnPause.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+    btnPause.className = isPaused ? 'btn btn-primary' : 'btn btn-amber';
+    btnPause.disabled = !running;
 
-    if (!running && checked > 0) {
+    if (!running && total > 0 && !data.cancelled) {
       stopPolling();
-      showToast(`Scan complete! ${lastResults.filter(r=>r.status==='OK').length} working proxies found.`, 'success');
+      const okCount = lastResults.filter(r => r.status === 'OK').length;
+      showToast(`Scan complete! ${okCount} working proxies found.`, 'success');
       document.getElementById('btnStart').disabled = false;
       document.getElementById('btnPause').disabled = true;
-      document.getElementById('btnDownload').disabled = false;
+      if (okCount > 0) document.getElementById('btnDownload').disabled = false;
       updateStatusBadge(false, false, true);
     }
   } catch(e) {}
@@ -636,6 +571,7 @@ async function fetchResults() {
 function setFilter(f) {
   currentFilter = f;
   document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+  document.getElementById('thStatus').style.display = f === 'ok' ? 'none' : '';
   renderTable(lastResults);
 }
 
@@ -645,25 +581,28 @@ function renderTable(results) {
     : currentFilter === 'ok' ? results.filter(r => r.status === 'OK')
     : results.filter(r => r.status === 'DEAD');
 
+  const showStatus = currentFilter !== 'ok';
+  const colspan = showStatus ? 4 : 3;
+
   const tbody = document.getElementById('resultsBody');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">${results.length === 0 ? '🔍' : '🔎'}</div><p>${results.length === 0 ? 'Upload a proxy list and click Start Scan' : 'No results match this filter'}</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="${colspan}"><div class="empty-state"><div class="empty-state-icon">${results.length === 0 ? '🔍' : '🔎'}</div><p>${results.length === 0 ? 'Upload a proxy list and click Start Scan' : 'No results match this filter'}</p></div></td></tr>`;
     return;
   }
 
-  // Show last 300, newest first
   const shown = filtered.slice().reverse().slice(0, 300);
   tbody.innerHTML = shown.map((r, i) => {
     const num = filtered.length - i;
     const latencyMatch = r.info.match(/([\d.]+)\s*ms/);
     const ms = latencyMatch ? parseFloat(latencyMatch[1]) : null;
     const latClass = ms === null ? '' : ms < 500 ? 'fast' : ms < 1500 ? '' : 'slow';
+    const statusCell = showStatus
+      ? `<td>${r.status === 'OK' ? '<span class="td-status-ok">● OK</span>' : '<span class="td-status-dead">● DEAD</span>'}</td>`
+      : '';
     return `<tr class="${i < 3 ? 'row-new' : ''}">
       <td class="td-num">${num}</td>
       <td class="td-proxy">${esc(r.proxy)}</td>
-      <td>${r.status === 'OK'
-        ? '<span class="td-status-ok">● OK</span>'
-        : '<span class="td-status-dead">● DEAD</span>'}</td>
+      ${statusCell}
       <td class="td-info latency ${latClass}">${esc(r.info)}</td>
     </tr>`;
   }).join('');
@@ -698,7 +637,6 @@ function updateStatusBadge(running, paused, done = false) {
   else { badge.classList.add('badge-idle'); text.textContent = 'Idle'; }
 }
 
-// ---- Utils ----
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
@@ -712,11 +650,12 @@ function showToast(msg, type = 'info') {
   toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
 }
 
+// Apply default filter state on load
+document.getElementById('thStatus').style.display = 'none';
+
 // Resume polling if a scan was already running
 fetchResults().then(() => {
-  const s = lastResults;
   if (document.getElementById('statTotal').textContent !== '0') {
-    // might still be running — poll to check
     startPolling();
   }
 });
