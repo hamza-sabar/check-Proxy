@@ -1,1 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProxyChecker Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b14;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --accent: #6366f1;
+  --accent2: #8b5cf6;
+  --green: #10b981;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --text: #f1f5f9;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -40%;
+  left: -20%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -30%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.header-badge span { width: 6px; height: 6px; background: #6366f1; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+.header h1 {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #e2e8f0 0%, #a5b4fc 50%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.header p {
+  color: var(--muted);
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(12px);
+}
+
+/* Upload */
+.upload-zone {
+  border: 2px dashed rgba(99,102,241,0.4);
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  margin-bottom: 20px;
+}
+.upload-zone.dragover {
+  border-color: var(--accent);
+  background: rgba(99,102,241,0.08);
+}
+.upload-zone:hover {
+  border-color: rgba(99,102,241,0.7);
+  background: rgba(99,102,241,0.05);
+}
+.upload-zone input[type="file"] { display: none; }
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(99,102,241,0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 1.5rem;
+}
+.upload-zone h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.upload-zone p { font-size: 0.82rem; color: var(--muted); }
+.file-selected {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  color: #6ee7b7;
+  margin-top: 12px;
+  display: none;
+}
+
+/* Action row */
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+}
+.btn-primary:hover { box-shadow: 0 4px 28px rgba(99,102,241,0.5); filter: brightness(1.1); }
+.btn-secondary {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+.btn-amber {
+  background: rgba(245,158,11,0.15);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: #fcd34d;
+}
+.btn-amber:hover { background: rgba(245,158,11,0.25); }
+.btn-green {
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #6ee7b7;
+}
+.btn-green:hover { background: rgba(16,185,129,0.25); }
+.btn-red {
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #fca5a5;
+}
+.btn-red:hover { background: rgba(239,68,68,0.25); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+/* Toast */
+.toast {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 14px;
+  display: none;
+  animation: fadeIn 0.2s;
+}
+.toast.show { display: block; }
+.toast-success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+.toast-error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+.toast-info { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); color: #a5b4fc; }
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+@media(max-width:600px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.stat-card.green::before { background: radial-gradient(circle at top left, rgba(16,185,129,0.08), transparent 70%); opacity: 1; }
+.stat-card.red::before { background: radial-gradient(circle at top left, rgba(239,68,68,0.08), transparent 70%); opacity: 1; }
+.stat-card.purple::before { background: radial-gradient(circle at top left, rgba(99,102,241,0.08), transparent 70%); opacity: 1; }
+.stat-card.amber::before { background: radial-gradient(circle at top left, rgba(245,158,11,0.08), transparent 70%); opacity: 1; }
+.stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px; }
+.stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; transition: all 0.3s; }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.red .stat-value { color: var(--red); }
+.stat-card.purple .stat-value { color: #a5b4fc; }
+.stat-card.amber .stat-value { color: var(--amber); }
+
+/* Progress */
+.progress-wrap { margin-bottom: 6px; }
+.progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
+.progress-label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+.progress-pct { font-size: 0.8rem; color: #a5b4fc; font-weight: 700; }
+.progress-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #a78bfa);
+  border-radius: 100px;
+  transition: width 0.4s ease;
+  width: 0%;
+  position: relative;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25));
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer { 0%,100%{opacity:0} 50%{opacity:1} }
+
+/* Status badge */
+.status-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.badge-idle { background: rgba(100,116,139,0.15); border: 1px solid rgba(100,116,139,0.25); color: var(--muted2); }
+.badge-running { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.35); color: #a5b4fc; }
+.badge-paused { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+.badge-done { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+.badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.badge-running .badge-dot { animation: pulse 1.2s infinite; }
+
+/* Filter tabs */
+.filter-tabs { display: flex; gap: 4px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 4px; margin-bottom: 16px; }
+.filter-tab {
+  flex: 1;
+  text-align: center;
+  padding: 7px 12px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--muted);
+  user-select: none;
+}
+.filter-tab.active {
+  background: var(--surface2);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.filter-tab:hover:not(.active) { color: var(--muted2); }
+
+/* Table */
+.table-wrap { overflow-x: auto; border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; min-width: 500px; }
+thead tr { background: rgba(0,0,0,0.25); }
+th {
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+td { padding: 11px 14px; font-size: 0.875rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+tbody tr:last-child td { border-bottom: none; }
+.td-num { color: var(--muted); font-size: 0.8rem; width: 50px; }
+.td-proxy { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #cbd5e1; }
+.td-status-ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.td-status-dead {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.td-info { color: var(--muted); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; }
+.empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.9rem; }
+
+/* Speed chip */
+.latency { color: #a5b4fc; }
+.latency.fast { color: var(--green); }
+.latency.slow { color: var(--amber); }
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+@keyframes rowIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
+
+.row-new { animation: rowIn 0.25s ease; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge"><span></span> Async · Multi-user · Real-time</div>
+    <h1>Proxy Checker Pro</h1>
+    <p>Upload your proxy list, check HTTP & SOCKS5 simultaneously at scale</p>
+  </div>
+
+  <!-- Upload card -->
+  <div class="card">
+    <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept=".txt">
+      <div class="upload-icon">📋</div>
+      <h3>Drop your proxy list here</h3>
+      <p>or click to browse — plain text, one proxy per line (host:port)</p>
+      <div class="file-selected" id="fileSelected">✔ <span id="fileName"></span></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="btnStart" onclick="startScan()">
+        ▶ Start Scan
+      </button>
+      <button class="btn btn-amber" id="btnPause" onclick="togglePause()" disabled>
+        ⏸ Pause
+      </button>
+      <button class="btn btn-green" id="btnDownload" onclick="downloadWorking()" disabled>
+        ↓ Download Working
+      </button>
+      <button class="btn btn-red" id="btnReset" onclick="resetScan()" style="margin-left:auto">
+        ✕ Reset
+      </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card purple">
+      <div class="stat-label">Total</div>
+      <div class="stat-value" id="statTotal">0</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Working</div>
+      <div class="stat-value" id="statOk">0</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Dead</div>
+      <div class="stat-value" id="statDead">0</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-label">Success Rate</div>
+      <div class="stat-value" id="statRate">—</div>
+    </div>
+  </div>
+
+  <!-- Results card -->
+  <div class="card">
+    <div class="status-row">
+      <span class="status-badge badge-idle" id="statusBadge">
+        <span class="badge-dot"></span>
+        <span id="statusText">Idle</span>
+      </span>
+      <span style="color:var(--muted);font-size:0.82rem" id="progressLabel"></span>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label" id="progressDesc">Waiting for scan…</span>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <div class="filter-tabs" id="filterTabs">
+      <div class="filter-tab active" data-filter="all" onclick="setFilter('all')">All</div>
+      <div class="filter-tab" data-filter="ok" onclick="setFilter('ok')">✔ Working</div>
+      <div class="filter-tab" data-filter="dead" onclick="setFilter('dead')">✕ Dead</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Proxy</th>
+            <th>Status</th>
+            <th>Latency / Info</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody">
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <div class="empty-state-icon">🔍</div>
+                <p>Upload a proxy list and click Start Scan</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Session ID — unique per browser tab, persisted in localStorage
+let SESSION_ID = localStorage.getItem('proxy_session_id');
+if (!SESSION_ID) {
+  SESSION_ID = crypto.randomUUID();
+  localStorage.setItem('proxy_session_id', SESSION_ID);
+}
+
+const HEADERS = { 'X-Session-Id': SESSION_ID };
+
+let pollingTimer = null;
+let isPaused = false;
+let currentFilter = 'all';
+let lastResults = [];
+
+// ---- Drag & Drop ----
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) setFile(file);
+});
+document.getElementById('fileInput').addEventListener('change', function() {
+  if (this.files[0]) setFile(this.files[0]);
+});
+
+function setFile(file) {
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSelected').style.display = 'inline-flex';
+  document.getElementById('fileInput')._file = file;
+}
+
+// ---- Actions ----
+async function startScan() {
+  const input = document.getElementById('fileInput');
+  const file = input._file || (input.files[0]);
+  if (!file) { showToast('Please select a proxy list file first.', 'error'); return; }
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  showToast('Starting scan…', 'info');
+  try {
+    const res = await fetch('/upload', { method: 'POST', body: formData, headers: HEADERS });
+    const data = await res.json();
+    if (data.error) { showToast(data.error, 'error'); return; }
+    showToast(data.message, 'success');
+    document.getElementById('btnPause').disabled = false;
+    document.getElementById('btnStart').disabled = true;
+    startPolling();
+  } catch(e) {
+    showToast('Connection error. Try again.', 'error');
+  }
+}
+
+async function togglePause() {
+  const res = await fetch('/toggle_pause', { method: 'POST', headers: HEADERS });
+  const data = await res.json();
+  isPaused = data.paused;
+  const btn = document.getElementById('btnPause');
+  btn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+  btn.className = isPaused ? 'btn btn-primary' : 'btn btn-amber';
+  updateStatusBadge(true, isPaused);
+}
+
+async function downloadWorking() {
+  const res = await fetch('/download', { headers: HEADERS });
+  if (!res.ok || res.headers.get('content-type')?.includes('json')) {
+    const d = await res.json().catch(()=>({}));
+    showToast(d.error || 'No working proxies to download.', 'error');
+    return;
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'working_proxies.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Download started!', 'success');
+}
+
+async function resetScan() {
+  const res = await fetch('/reset', { method: 'POST', headers: HEADERS });
+  const data = await res.json();
+  if (data.error) { showToast(data.error, 'error'); return; }
+  stopPolling();
+  lastResults = [];
+  isPaused = false;
+  renderTable([]);
+  updateStats([]);
+  setProgress(0, 0, 0);
+  updateStatusBadge(false, false);
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnPause').disabled = true;
+  document.getElementById('btnPause').textContent = '⏸ Pause';
+  document.getElementById('btnPause').className = 'btn btn-amber';
+  document.getElementById('btnDownload').disabled = true;
+  showToast('Session reset.', 'info');
+}
+
+// ---- Polling ----
+function startPolling() {
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(fetchResults, 1200);
+  fetchResults();
+}
+function stopPolling() {
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = null;
+}
+
+async function fetchResults() {
+  try {
+    const res = await fetch('/results', { headers: HEADERS });
+    const data = await res.json();
+    lastResults = data.results || [];
+    isPaused = data.paused;
+    const running = data.running;
+
+    updateStats(lastResults);
+    renderTable(lastResults);
+
+    const checked = lastResults.length;
+    const total = data.total || 0;
+    setProgress(checked, total, total > 0 ? Math.round(checked / total * 100) : 0);
+    updateStatusBadge(running, isPaused);
+
+    const btn = document.getElementById('btnPause');
+    btn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+    btn.className = isPaused ? 'btn btn-primary' : 'btn btn-amber';
+
+    if (!running && checked > 0) {
+      stopPolling();
+      showToast(`Scan complete! ${lastResults.filter(r=>r.status==='OK').length} working proxies found.`, 'success');
+      document.getElementById('btnStart').disabled = false;
+      document.getElementById('btnPause').disabled = true;
+      document.getElementById('btnDownload').disabled = false;
+      updateStatusBadge(false, false, true);
+    }
+  } catch(e) {}
+}
+
+// ---- Filter ----
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+  renderTable(lastResults);
+}
+
+// ---- Render ----
+function renderTable(results) {
+  const filtered = currentFilter === 'all' ? results
+    : currentFilter === 'ok' ? results.filter(r => r.status === 'OK')
+    : results.filter(r => r.status === 'DEAD');
+
+  const tbody = document.getElementById('resultsBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">${results.length === 0 ? '🔍' : '🔎'}</div><p>${results.length === 0 ? 'Upload a proxy list and click Start Scan' : 'No results match this filter'}</p></div></td></tr>`;
+    return;
+  }
+
+  // Show last 300, newest first
+  const shown = filtered.slice().reverse().slice(0, 300);
+  tbody.innerHTML = shown.map((r, i) => {
+    const num = filtered.length - i;
+    const latencyMatch = r.info.match(/([\d.]+)\s*ms/);
+    const ms = latencyMatch ? parseFloat(latencyMatch[1]) : null;
+    const latClass = ms === null ? '' : ms < 500 ? 'fast' : ms < 1500 ? '' : 'slow';
+    return `<tr class="${i < 3 ? 'row-new' : ''}">
+      <td class="td-num">${num}</td>
+      <td class="td-proxy">${esc(r.proxy)}</td>
+      <td>${r.status === 'OK'
+        ? '<span class="td-status-ok">● OK</span>'
+        : '<span class="td-status-dead">● DEAD</span>'}</td>
+      <td class="td-info latency ${latClass}">${esc(r.info)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStats(results) {
+  const ok = results.filter(r => r.status === 'OK').length;
+  const dead = results.filter(r => r.status === 'DEAD').length;
+  const total = results.length;
+  const rate = total > 0 ? Math.round(ok / total * 100) + '%' : '—';
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statOk').textContent = ok;
+  document.getElementById('statDead').textContent = dead;
+  document.getElementById('statRate').textContent = rate;
+}
+
+function setProgress(checked, total, pct) {
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressDesc').textContent = total > 0
+    ? `${checked} / ${total} proxies checked`
+    : 'Waiting for scan…';
+}
+
+function updateStatusBadge(running, paused, done = false) {
+  const badge = document.getElementById('statusBadge');
+  const text = document.getElementById('statusText');
+  badge.className = 'status-badge';
+  if (done) { badge.classList.add('badge-done'); text.textContent = 'Done'; }
+  else if (paused) { badge.classList.add('badge-paused'); text.textContent = 'Paused'; }
+  else if (running) { badge.classList.add('badge-running'); text.textContent = 'Running'; }
+  else { badge.classList.add('badge-idle'); text.textContent = 'Idle'; }
+}
+
+// ---- Utils ----
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+let toastTimer;
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show toast-${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// Resume polling if a scan was already running
+fetchResults().then(() => {
+  const s = lastResults;
+  if (document.getElementById('statTotal').textContent !== '0') {
+    // might still be running — poll to check
+    startPolling();
+  }
+});
+</script>
+</body>
+</html>
